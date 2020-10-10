@@ -6,15 +6,46 @@
 </head>
 <body>
   <div id="app">
-    {{ message }}
+
+    <div>
+        <input v-model="input">
+        <button v-on:click="calculateSalaries">Calculate Salaries</button>
+    </div>
+    <div v-if="output !== ''">
+        <ul>
+            <li v-for="item in output">{{ item.value }}</li>
+        </ul>
+    </div>
+    
   </div>
 
   <script>
     var app = new Vue({
-      el: '#app',
-      data: {
-        message: 'Bills Separate!'
-      }
+        el: '#app',
+        data: {
+            message: 'Bills Separate!',
+            input: "",
+            output: [],
+            total: 0
+        },
+        methods: {
+            calculateSalaries: function () {
+                this.output = [];
+
+                if (Math.floor(this.input / 1000) > 0) {
+                    this.output.push({ value: Math.floor(this.input / 1000) + " x 1000" })
+                    var hundreds = Math.floor(this.input % 1000)
+                }
+
+                if (Math.floor(hundreds / 500) > 0) {
+                    this.output.push({ value: Math.floor(hundreds / 500) + " x 500" })
+                }
+
+                if (Math.floor(hundreds % 500)) {
+                    this.output.push({ value: Math.floor(hundreds % 500) / 100 + " x 100"})
+                }
+            }
+        }
     })
   </script>
 </body>
