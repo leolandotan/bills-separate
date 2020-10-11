@@ -30,19 +30,16 @@
         },
         methods: {
             calculateSalaries: function () {
-                this.output = [];
+                this.output = []
+                let amount = this.input
 
-                if (Math.floor(this.input / 1000) > 0) {
-                    this.output.push({ value: Math.floor(this.input / 1000) + " x 1000" })
-                    var hundreds = Math.floor(this.input % 1000)
-                }
+                let denominations = [1000, 500, 100, 50, 20, 10, 1, .25]
 
-                if (Math.floor(hundreds / 500) > 0) {
-                    this.output.push({ value: Math.floor(hundreds / 500) + " x 500" })
-                }
-
-                if (Math.floor(hundreds % 500)) {
-                    this.output.push({ value: Math.floor(hundreds % 500) / 100 + " x 100"})
+                for (let denomination of denominations) {
+                    if (Math.floor(amount / denomination) > 0) {
+                        this.output.push({ value: Math.floor(amount / denomination) + " x " + denomination + ( denomination >= 1 ? ".00" : "") })
+                        amount %= denomination
+                    }
                 }
             }
         }
