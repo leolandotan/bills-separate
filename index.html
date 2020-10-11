@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bills Separate</title>
 
-    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
@@ -24,10 +24,11 @@
                 <form>
                     <div class="form-group">
                         <label for="salaryTextarea">Salaries</label>
-                        <textarea id="salaryTextarea" class="form-control" rows="8" v-model="input"></textarea>
+                        <textarea id="salaryTextarea" class="form-control" rows="8" v-model="input" required></textarea>
                     </div>
                     <div class="form-group">
-                        <button type="button" class="btn btn-primary" v-on:click="calculateSalaries">Separate denominations</button>
+                        <button type="button" class="btn btn-primary" v-on:click="calculateSalaries" :disabled='isDisabled'>Separate denominations</button>
+                        <button type="button" class="btn btn-danger" v-on:click="clearSalaries">Clear</button>
                     </div>
                 </form>
 
@@ -147,6 +148,14 @@
                             this.message += salary + " is not a valid currency\n";
                         }
                     }
+                },
+                clearSalaries: function () {
+                    this.input = ""
+                }
+            },
+            computed: {
+                isDisabled: function () {
+                    return !this.input
                 }
             }
         })
