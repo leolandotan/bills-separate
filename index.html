@@ -1,136 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Bills Separate</title>
-  <script src="https://unpkg.com/vue"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bills Separate</title>
+
+    <script src="https://unpkg.com/vue"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-  <div id="app">
+    <div id="app" class="container">
+        <div class="row">
+            <div class="col-md">
+                <h1>Bills Separate!</h1>
+                <div v-if="message">
+                    {{ message }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
+                <form>
+                    <div class="form-group">
+                        <label for="salaryTextarea">Salaries</label>
+                        <textarea id="salaryTextarea" class="form-control" rows="8" v-model="input"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" v-on:click="calculateSalaries">Separate denominations</button>
+                    </div>
+                </form>
 
-    <div v-model="message">
-        {{ message }}
-    </div>
+                <div class="mb-4" v-if="show">
+                    <h2>Overall denomination breakdown</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item" v-for="denomination in denominations">{{ denomination.totalCount }} x {{ denomination.amount }}</li>
+                    </ul>
+                </div>
 
-    <div>
-        <textarea v-model="input"></textarea>
-    </div>
-    <div>
-        <button v-on:click="calculateSalaries">Separate denominations</button>
-    </div>
-    <div v-if="show">
-        <h2>Overall denomination breakdown</h2>
-        <ul>
-            <li v-for="denomination in denominations">{{ denomination.totalCount }} x {{ denomination.amount }}</li>
-        </ul>
-    </div>
+            </div>
 
-    <div v-if="show">
-        <h2>Salary breakdown</h2>
-        <div v-for="item in output">
-            <h3>{{ item.salary }}</h3>
-            <ul>
-                <li v-for="item2 in item.specificDenomination">{{ item2.count }} x {{ item2.denomination }}</li>
-            </ul>
+            <div class="col-md">
+                <div v-if="show">
+                    <h2>Salary breakdown</h2>
+                    <div class="card mb-4" v-for="item in output">
+                        <h3 class="card-header">{{ item.salary }}</h3>
+                        <ul class="list-group">
+                            <li class="list-group-item" v-for="item2 in item.specificDenomination">{{ item2.count }} x {{ item2.denomination }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     
-  </div>
-
-  <script>
-    var app = new Vue({
-        el: '#app',
-        data: {
-            message: 'Bills Separate!',
-            input: "",
-            show: false,
-            output: [],
-            denominations: [
-                {
-                    amount: 1000,
-                    totalCount: 0
-                },
-                {
-                    amount: 500,
-                    totalCount: 0
-                },
-                {
-                    amount: 100,
-                    totalCount: 0
-                },
-                {
-                    amount: 50,
-                    totalCount: 0
-                },
-                {
-                    amount: 20,
-                    totalCount: 0
-                },
-                {
-                    amount: 10,
-                    totalCount: 0
-                },
-                {
-                    amount: 5,
-                    totalCount: 0
-                },
-                {
-                    amount: 1,
-                    totalCount: 0
-                },
-                {
-                    amount: 0.25,
-                    totalCount: 0
-                }
-            ],
-            total: 0
-        },
-        methods: {
-            calculateSalaries: function () {
-                this.output = []
-                const currencyRegEx = /^\d+(?:\.\d{0,2})$/;
-                let salaries = this.input.replaceAll(/[₱,]/g, "").split("\n")
-
-                for (let [index, denomination] of this.denominations.entries()) {
-                    this.denominations[index].totalCount = 0
-                }
-
-                for (let salary of salaries) {
-                    let amount = salary;
-                    let specificDenomination = [];
-
-
-
-                    if (currencyRegEx.test(salary)) {
-
-                        for (let [index, denomination] of this.denominations.entries()) {
-
-                            if (Math.floor(amount / denomination.amount) > 0) {
-                                this.denominations[index].totalCount += Math.floor(amount / denomination.amount)
-
-                                specificDenomination.push({
-                                    denomination: denomination.amount,
-                                    count: Math.floor(amount / denomination.amount)
-                                });
-
-                                amount %= denomination.amount
-                            }
-                        }
-
-                        this.output.push({
-                            salary: salary,
-                            specificDenomination: specificDenomination
-                        });
-
-                        this.show = true
-
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: "",
+                input: "",
+                show: false,
+                output: [],
+                denominations: [
+                    {
+                        amount: 1000,
+                        totalCount: 0
+                    },
+                    {
+                        amount: 500,
+                        totalCount: 0
+                    },
+                    {
+                        amount: 100,
+                        totalCount: 0
+                    },
+                    {
+                        amount: 50,
+                        totalCount: 0
+                    },
+                    {
+                        amount: 20,
+                        totalCount: 0
+                    },
+                    {
+                        amount: 10,
+                        totalCount: 0
+                    },
+                    {
+                        amount: 5,
+                        totalCount: 0
+                    },
+                    {
+                        amount: 1,
+                        totalCount: 0
+                    },
+                    {
+                        amount: 0.25,
+                        totalCount: 0
                     }
-                    else {
-                        this.message += salary + " is not a valid currency\n";
+                ],
+                total: 0
+            },
+            methods: {
+                calculateSalaries: function () {
+                    this.output = []
+                    const currencyRegEx = /^\d+(?:\.\d{0,2})$/;
+                    let salaries = this.input.replaceAll(/[₱,]/g, "").split("\n")
+
+                    for (let [index, denomination] of this.denominations.entries()) {
+                        this.denominations[index].totalCount = 0
+                    }
+
+                    for (let salary of salaries) {
+                        let amount = salary;
+                        let specificDenomination = [];
+
+
+
+                        if (currencyRegEx.test(salary)) {
+
+                            for (let [index, denomination] of this.denominations.entries()) {
+
+                                if (Math.floor(amount / denomination.amount) > 0) {
+                                    this.denominations[index].totalCount += Math.floor(amount / denomination.amount)
+
+                                    specificDenomination.push({
+                                        denomination: denomination.amount,
+                                        count: Math.floor(amount / denomination.amount)
+                                    });
+
+                                    amount %= denomination.amount
+                                }
+                            }
+
+                            this.output.push({
+                                salary: salary,
+                                specificDenomination: specificDenomination
+                            });
+
+                            this.show = true
+
+                        }
+                        else {
+                            this.message += salary + " is not a valid currency\n";
+                        }
                     }
                 }
             }
-        }
-    })
-  </script>
+        })
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
